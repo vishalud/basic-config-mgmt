@@ -45,9 +45,7 @@ if [ -s pkgs/install.txt ]; then
   done
 fi
 
-# --------------------------
 # setting file ownership and content
-# --------------------------
 
 # remove default index.html and replace it with index.php if the file exists
 if [ -f "/var/www/html/index.html" ]; then
