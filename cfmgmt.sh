@@ -46,31 +46,29 @@ if [ -s pkgs/install.txt ]; then
 fi
 
 # --------------------------
-# Setting Metadata and Content
+# setting file ownership and content
 # --------------------------
 
-# Replace default index.html with index.php if the file exists
+# remove default index.html and replace it with index.php if the file exists
 if [ -f "/var/www/html/index.html" ]; then
   sudo rm /var/www/html/index.html
   touch /var/www/html/index.php
 fi
 
-# Build our associative array from key val pairs in metadata.txt
-# Note: Separator and order are important in this text file
+#Build our array for file permissions and content from key val pairs that are defined in properties.txt
+#the order in which they're specified matters as the script simply pupulates the properties in that order
 
-# Runs only if uninstall list is not empty
-if [ -s metadata.txt ]; then
-  declare -A metadata
+# Runs only if properties.txt is not empty
+if [ -s properties.txt ]; then
+  declare -A properties
   while IFS== read -r key value; do
-    metadata[$key]=$value
-  done < "metadata.txt"
-  sudo chmod "${metadata[permissions]}" "${metadata[file]}"
-  sudo chown "${metadata[owner]}" "${metadata[file]}"
-  sudo chgrp "${metadata[group]}" "${metadata[file]}"
-  sudo echo "${metadata[content]}" > "${metadata[file]}"
+    properties[$key]=$value
+  done < "properties.txt"
+  sudo chmod "${properties[permissions]}" "${properties[file]}"
+  sudo chown "${properties[owner]}" "${properties[file]}"
+  sudo chgrp "${properties[group]}" "${properties[file]}"
+  sudo echo "${properties[content]}" > "${properties[file]}"
 fi
 
-# --------------------------
-# Check for Required Restart
-# --------------------------
+#check if any services need to be restarted
 needrestart
