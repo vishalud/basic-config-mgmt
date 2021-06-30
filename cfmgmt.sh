@@ -18,8 +18,8 @@ if [ -s pkgs/uninstall.txt ]; then
   for del_pkg in "${removal_list[@]}"
   do
     if dpkg -l | grep -i "${del_pkg}"; then
-      sudo apt-get remove "${del_pkg}" # Uninstall packages from removal_list array
-      sudo apt-get autoremove # Remove packages that arent genrally needed
+      sudo apt-get remove "${del_pkg}" # Uninstall packages from removal_list array. Not using -y because its a destructive action
+      sudo apt-get autoremove # Remove packages that arent genrally needed. Not using -y because its a destructive action. 
       sudo apt-get purge -y $(dpkg --list |grep '^rc' |awk '{print $2}') # Remove obsolete config files
       sudo apt-get clean # Run apt-get clean
     fi
@@ -54,7 +54,8 @@ if [ -f "/var/www/html/index.html" ]; then
 fi
 
 #Build our array for file permissions and content from key val pairs that are defined in properties.txt
-#the order in which they're specified matters as the script simply pupulates the properties in that order
+#the order in which they're specified matters as the script simply pupulates the properties in that order. There's probably
+# a better way to this but I'm not
 
 # Runs only if properties.txt is not empty
 if [ -s properties.txt ]; then
